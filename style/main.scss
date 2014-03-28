@@ -1,9 +1,9 @@
 @import "helpers";
 @import "fonts/clear-sans.css";
 
-$field-width: 500px;
+$field-width: 365px;
 $grid-spacing: 10px;
-$grid-row-cells: 4;
+$grid-row-cells: 5;
 $tile-size: ($field-width - $grid-spacing * ($grid-row-cells + 1)) / $grid-row-cells;
 $tile-border-radius: 3px;
 
@@ -20,47 +20,6 @@ $game-container-margin-top: 40px;
 $game-container-background: #bbada0;
 
 $transition-speed: 100ms;
-
-
-$sqrt_3: 1.7320508;
-$hex-side: 61px;
-$hex-inner-height: $sqrt_3*$hex-side;
-$hex-up-spacing: $hex-side/2 + $sqrt_3*$grid-spacing/2;
-
-$hex-side-midle-tria-side: $hex-side*2/$sqrt_3;
-$side-spacing-in-large: $grid-spacing/$sqrt_3;
-$large-hex-size: $hex-side-midle-tria-side + 2*$hex-inner-height + 2*$grid-spacing + 2*$side-spacing-in-large;
-$large-hex-inner-height: $sqrt_3*$large-hex-size;
-
-.hexagon {
-    width: $hex-inner-height;
-    height: $hex-side;
-    background: red;
-    position: relative;
-}
-.hexagon:before {
-    content: "";
-    position: absolute;
-    top: -$hex-side/2+1px;
-    left: 0;
-    width: 0;
-    height: 0;
-    border-left: $hex-inner-height/2 solid transparent;
-    border-right: $hex-inner-height/2 solid transparent;
-    border-bottom: $hex-side/2 solid red;
-}
-.hexagon:after {
-    content: "";
-    position: absolute;
-    bottom: -$hex-side/2+1px;
-    left: 0;
-    width: 0;
-    height: 0;
-    border-left: $hex-inner-height/2 solid transparent;
-    border-right: $hex-inner-height/2 solid transparent;
-    border-top: $hex-side/2 solid red;
-}
-
 
 html, body {
   margin: 0;
@@ -210,6 +169,16 @@ hr {
 
 // Game field mixin used to render CSS at different width
 @mixin game-field {
+  $sqrt_3: 1.7320508;
+  $hex-inner-height: $sqrt_3*$tile-size;
+  $hex-up-spacing: $tile-size/2 + $sqrt_3*$grid-spacing/2;
+
+  $tile-size-midle-tria-side: $tile-size*2/$sqrt_3;
+  $side-spacing-in-large: $grid-spacing/$sqrt_3;
+  $large-hex-size: $tile-size-midle-tria-side + 2*$hex-inner-height + 2*$grid-spacing + 2*$side-spacing-in-large;
+  $large-hex-inner-height: $sqrt_3*$large-hex-size;
+
+
   .game-container {
     margin-top: $game-container-margin-top;
     position: relative;
@@ -316,8 +285,8 @@ hr {
   }
 
   .grid-container {
-    margin-top: $hex-side/2 + $grid-spacing;
-    margin-left: -$hex-inner-height - $grid-spacing + ($hex-side-midle-tria-side/2 - $hex-inner-height/2) + $side-spacing-in-large;
+    margin-top: $tile-size/2 + $grid-spacing;
+    margin-left: -$hex-inner-height - $grid-spacing + ($tile-size-midle-tria-side/2 - $hex-inner-height/2) + $side-spacing-in-large;
     display: table;
     position: absolute;
     z-index: 1;
@@ -356,20 +325,39 @@ hr {
 
     .hexagon {
       background: mix($tile-color, $game-container-background, 35);
+      width: $hex-inner-height;
+      height: $tile-size;
+      position: relative;
       &:after {
-        border-top-color: mix($tile-color, $game-container-background, 35);
+        content: "";
+        position: absolute;
+        top: -$tile-size/2+1px;
+        left: 0;
+        width: 0;
+        height: 0;
+        border-left: $hex-inner-height/2 solid transparent;
+        border-right: $hex-inner-height/2 solid transparent;
+        border-bottom: $tile-size/2 solid mix($tile-color, $game-container-background, 35);
       }
       &:before {
-        border-bottom-color: mix($tile-color, $game-container-background, 35);
+        content: "";
+        position: absolute;
+        bottom: -$tile-size/2+1px;
+        left: 0;
+        width: 0;
+        height: 0;
+        border-left: $hex-inner-height/2 solid transparent;
+        border-right: $hex-inner-height/2 solid transparent;
+        border-top: $tile-size/2 solid mix($tile-color, $game-container-background, 35);
       }
-    }
 
-    &:last-child {
-      margin-right: 0;
-      padding-right: 0;
-    }
-    &:first-child{
-      padding-left: 0;
+      &:last-child {
+        margin-right: 0;
+        padding-right: 0;
+      }
+      &:first-child{
+        padding-left: 0;
+      }
     }
   }
 
@@ -380,18 +368,56 @@ hr {
 
   .tile {
     &, .tile-inner {
-      width: ceil($tile-size);
-      height: ceil($tile-size);
-      line-height: $tile-size + 10px;
+      line-height: $tile-size + 12px;
+    }
+    .tile-inner{
+        width: $hex-inner-height;
+        height: $tile-size;
+        background: red;
+        position: relative;
+      &:before {
+        content: "";
+        position: absolute;
+        top: -$tile-size/2+1px;
+        left: 0;
+        width: 0;
+        height: 0;
+        border-left: $hex-inner-height/2 solid transparent;
+        border-right: $hex-inner-height/2 solid transparent;
+        border-bottom: $tile-size/2 solid white;
+      }
+      &:after {
+        content: "";
+        position: absolute;
+        bottom: -$tile-size/2+1px;
+        left: 0;
+        width: 0;
+        height: 0;
+        border-left: $hex-inner-height/2 solid transparent;
+        border-right: $hex-inner-height/2 solid transparent;
+        border-top: $tile-size/2 solid white;
+      }
     }
 
     // Build position classes
-    @for $x from 1 through $grid-row-cells {
-      @for $y from 1 through $grid-row-cells {
-        &.tile-position-#{$x}-#{$y} {
-          $xPos: floor(($tile-size + $grid-spacing) * ($x - 1));
-          $yPos: floor(($tile-size + $grid-spacing) * ($y - 1));
-          @include transform(translate($xPos, $yPos));
+    @for $x from 1 through 5 {
+      @for $y from 1 through 5 {
+        $go: false;
+        @if $y < 4 { $go: true; }
+        @if $y == 4 {
+          @if $x == 2 { $go: true; }
+          @if $x == 3 { $go: true; }
+          @if $x == 4 { $go: true; }
+        }
+        @if $y == 5 {
+          @if $x == 3 { $go: true; }
+        }
+        @if $go {
+          &.tile-position-#{$x}-#{$y} {
+            $xPos: -($tile-size - $hex-inner-height/2);
+            $yPos: ($grid-spacing + $tile-size/2) + ($tile-size + $hex-up-spacing) *($y - 1);
+            @include transform(translate($xPos, $yPos));
+          }
         }
       }
     }
@@ -564,7 +590,7 @@ hr {
 
 @include smaller($mobile-threshold) {
   // Redefine variables for smaller screens
-  $field-width: 280px;
+  $field-width: 200px;
   $grid-spacing: 10px;
   $grid-row-cells: 4;
   $tile-size: ($field-width - $grid-spacing * ($grid-row-cells + 1)) / $grid-row-cells;
