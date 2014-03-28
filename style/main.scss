@@ -2,7 +2,7 @@
 @import "fonts/clear-sans.css";
 
 $field-width: 500px;
-$grid-spacing: 15px;
+$grid-spacing: 10px;
 $grid-row-cells: 4;
 $tile-size: ($field-width - $grid-spacing * ($grid-row-cells + 1)) / $grid-row-cells;
 $tile-border-radius: 3px;
@@ -20,6 +20,47 @@ $game-container-margin-top: 40px;
 $game-container-background: #bbada0;
 
 $transition-speed: 100ms;
+
+
+$sqrt_3: 1.7320508;
+$hex-side: 61px;
+$hex-inner-height: $sqrt_3*$hex-side;
+$hex-up-spacing: $hex-side/2 + $sqrt_3*$grid-spacing/2;
+
+$hex-side-midle-tria-side: $hex-side*2/$sqrt_3;
+$side-spacing-in-large: $grid-spacing/$sqrt_3;
+$large-hex-size: $hex-side-midle-tria-side + 2*$hex-inner-height + 2*$grid-spacing + 2*$side-spacing-in-large;
+$large-hex-inner-height: $sqrt_3*$large-hex-size;
+
+.hexagon {
+    width: $hex-inner-height;
+    height: $hex-side;
+    background: red;
+    position: relative;
+}
+.hexagon:before {
+    content: "";
+    position: absolute;
+    top: -$hex-side/2+1px;
+    left: 0;
+    width: 0;
+    height: 0;
+    border-left: $hex-inner-height/2 solid transparent;
+    border-right: $hex-inner-height/2 solid transparent;
+    border-bottom: $hex-side/2 solid red;
+}
+.hexagon:after {
+    content: "";
+    position: absolute;
+    bottom: -$hex-side/2+1px;
+    left: 0;
+    width: 0;
+    height: 0;
+    border-left: $hex-inner-height/2 solid transparent;
+    border-right: $hex-inner-height/2 solid transparent;
+    border-top: $hex-side/2 solid red;
+}
+
 
 html, body {
   margin: 0;
@@ -172,7 +213,6 @@ hr {
   .game-container {
     margin-top: $game-container-margin-top;
     position: relative;
-    padding: $grid-spacing;
 
     cursor: default;
     -webkit-touch-callout: none;
@@ -186,12 +226,38 @@ hr {
     touch-action: none;
 
     background: $game-container-background;
-    border-radius: $tile-border-radius * 2;
-    width: $field-width;
-    height: $field-width;
+
+    width: $large-hex-size;
+    height: $large-hex-inner-height;
+
+    overflow: visible;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
+
+    &:after{
+      content: "";
+      position: absolute;
+      left: -$large-hex-size/2+1px;
+      bottom: 0;
+      width: 0;
+      height: 0;
+      border-bottom: $large-hex-inner-height/2 solid transparent;
+      border-top: $large-hex-inner-height/2 solid transparent;
+      border-right: $large-hex-size/2 solid $game-container-background;
+    }
+
+    &:before {
+      content: "";
+      position: absolute;
+      right: -$large-hex-size/2+1px;
+      bottom: 0;
+      width: 0;
+      height: 0;
+      border-bottom: $large-hex-inner-height/2 solid transparent;
+      border-top: $large-hex-inner-height/2 solid transparent;
+      border-left: $large-hex-size/2 solid $game-container-background;
+    }
 
     .game-message {
       display: none;
@@ -250,12 +316,25 @@ hr {
   }
 
   .grid-container {
+    margin-top: $hex-side/2 + $grid-spacing;
+    margin-left: -$hex-inner-height - $grid-spacing + ($hex-side-midle-tria-side/2 - $hex-inner-height/2) + $side-spacing-in-large;
+    display: table;
     position: absolute;
     z-index: 1;
   }
 
+
+
   .grid-row {
-    margin-bottom: $grid-spacing;
+    margin-bottom: $hex-up-spacing;
+
+    &:nth-child(1), &:nth-child(5){
+      margin-left: $hex-inner-height + $grid-spacing;
+    }
+
+    &:nth-child(2), &:nth-child(4){
+      margin-left: $hex-inner-height/2 + $grid-spacing/2;
+    }
 
     &:last-child {
       margin-bottom: 0;
@@ -269,17 +348,28 @@ hr {
   }
 
   .grid-cell {
-    width: $tile-size;
-    height: $tile-size;
+    display: table-cell;
+    padding: { left: 0; right: $grid-spacing }
     margin-right: $grid-spacing;
-    float: left;
 
     border-radius: $tile-border-radius;
 
-    background: rgba($tile-color, .35);
+    .hexagon {
+      background: mix($tile-color, $game-container-background, 35);
+      &:after {
+        border-top-color: mix($tile-color, $game-container-background, 35);
+      }
+      &:before {
+        border-bottom-color: mix($tile-color, $game-container-background, 35);
+      }
+    }
 
     &:last-child {
       margin-right: 0;
+      padding-right: 0;
+    }
+    &:first-child{
+      padding-left: 0;
     }
   }
 
