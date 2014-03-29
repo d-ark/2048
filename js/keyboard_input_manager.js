@@ -127,7 +127,7 @@ KeyboardInputManager.prototype.listen = function () {
       if (absDy < 15) {
         self.emit("move", (dx > 0 ? 1 : 3));
       } else {
-        self.emit("move", dx > 0 ? (dy > 0 ? 5 : 0) : (dy > 0 ? 4 : 2 ));
+        self.emit("move", dx > 0 ? (dy > 0 ? 4 : 0) : (dy > 0 ? 5 : 2 ));
       }
     }
   });
