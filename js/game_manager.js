@@ -132,7 +132,7 @@ GameManager.prototype.moveTile = function (tile, cell) {
 
 // Move tiles on the grid in the specified direction
 GameManager.prototype.move = function (direction) {
-  // 0: up, 1: right, 2: down, 3: left
+  // 0: upright, 1: right, 2: downright, 3: left, 4: upleft, 5: downleft
   var self = this;
 
   if (this.isGameTerminated()) return; // Don't do anything if the game's over
@@ -198,10 +198,12 @@ GameManager.prototype.move = function (direction) {
 GameManager.prototype.getVector = function (direction) {
   // Vectors representing tile movement
   var map = {
-    0: { x: 0,  y: -1 }, // Up
+    0: { x: 0,  y: -1 }, // UpRight
     1: { x: 1,  y: 0 },  // Right
-    2: { x: 0,  y: 1 },  // Down
-    3: { x: -1, y: 0 }   // Left
+    2: { x: 0,  y: 1 },  // DownRight
+    3: { x: -1, y: 0 },  // Left
+    4: { x: -1, y: -1 }, // UpLeft
+    5: { x: 1,  y: 1 },  // DownLeft
   };
 
   return map[direction];
@@ -254,7 +256,7 @@ GameManager.prototype.tileMatchesAvailable = function () {
       tile = this.grid.cellContent({ x: x, y: y });
 
       if (tile) {
-        for (var direction = 0; direction < 4; direction++) {
+        for (var direction = 0; direction < 6; direction++) {
           var vector = self.getVector(direction);
           var cell   = { x: x + vector.x, y: y + vector.y };
 

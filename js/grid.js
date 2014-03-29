@@ -37,6 +37,8 @@ Grid.prototype.fromState = function (state) {
 Grid.prototype.randomAvailableCell = function () {
   var cells = this.availableCells();
 
+  console.log(cells)
+
   if (cells.length) {
     return cells[Math.floor(Math.random() * cells.length)];
   }
@@ -58,9 +60,22 @@ Grid.prototype.availableCells = function () {
 Grid.prototype.eachCell = function (callback) {
   for (var x = 0; x < this.size; x++) {
     for (var y = 0; y < this.size; y++) {
-      callback(x, y, this.cells[x][y]);
+      if (!this.isBadCell(x,y)) {
+        callback(x, y, this.cells[x][y]);
+      }
     }
   }
+};
+
+Grid.prototype.isBadCell = function(x,y) {
+  h = Math.floor(this.size / 2)
+  if (y < x - h) {
+    return true
+  }
+  if (y > x - h + this.size - 1){
+    return true
+  }
+  return false
 };
 
 // Check if there are any cells available
@@ -96,7 +111,8 @@ Grid.prototype.removeTile = function (tile) {
 
 Grid.prototype.withinBounds = function (position) {
   return position.x >= 0 && position.x < this.size &&
-         position.y >= 0 && position.y < this.size;
+         position.y >= 0 && position.y < this.size &&
+         !this.isBadCell(position.x, position.y);
 };
 
 Grid.prototype.serialize = function () {
