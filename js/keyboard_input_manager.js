@@ -48,7 +48,7 @@ KeyboardInputManager.prototype.listen = function () {
     83: 2, // S
     65: 3, // A
     81: 4, // Q
-    69: 5  //E
+    69: 5  // E
   };
 
   // Respond to direction keys
@@ -124,10 +124,10 @@ KeyboardInputManager.prototype.listen = function () {
 
     if (Math.max(absDx, absDy) > 10) {
       // (right : left) : (down : up)
-      if (absDy < 10) {
+      if (absDy < 15) {
         self.emit("move", (dx > 0 ? 1 : 3));
       } else {
-        self.emit("move", dx > 0 ? (dy > 0 ? 2 : 0) : (dy > 0 ? 5 : 4 ));
+        self.emit("move", dx > 0 ? (dy > 0 ? 2 : 4) : (dy > 0 ? 5 : 0 ));
       }
     }
   });
