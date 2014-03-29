@@ -124,7 +124,7 @@ KeyboardInputManager.prototype.listen = function () {
 
     if (Math.max(absDx, absDy) > 10) {
       // (right : left) : (down : up)
-      if (absDy < 15) {
+      if (absDy < 20) {
         self.emit("move", (dx > 0 ? 1 : 3));
       } else {
         self.emit("move", dx > 0 ? (dy > 0 ? 5 : 0) : (dy > 0 ? 2 : 4 ));
