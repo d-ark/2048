@@ -75,6 +75,9 @@ Grid.prototype.isBadCell = function(x,y) {
   if (y > x - h + this.size - 1){
     return true
   }
+  if ( x == h && y == h) {
+    return true
+  }
   return false
 };
 

@@ -277,6 +277,11 @@ hr {
     .grid-cell .hexagon:first-child {
       padding-left: 0; }
 
+.grid-row:nth-child(3) > .grid-cell:nth-child(3) .hexagon {
+  background: transparent; }
+  .grid-row:nth-child(3) > .grid-cell:nth-child(3) .hexagon:after, .grid-row:nth-child(3) > .grid-cell:nth-child(3) .hexagon:before {
+    border-color: transparent; }
+
 .tile-container {
   position: absolute;
   z-index: 2; }
@@ -817,6 +822,11 @@ hr {
         padding-right: 0; }
       .grid-cell .hexagon:first-child {
         padding-left: 0; }
+
+  .grid-row:nth-child(3) > .grid-cell:nth-child(3) .hexagon {
+    background: transparent; }
+    .grid-row:nth-child(3) > .grid-cell:nth-child(3) .hexagon:after, .grid-row:nth-child(3) > .grid-cell:nth-child(3) .hexagon:before {
+      border-color: transparent; }
 
   .tile-container {
     position: absolute;

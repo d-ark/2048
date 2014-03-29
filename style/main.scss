@@ -364,6 +364,13 @@ hr {
         padding-left: 0;
       }
     }
+
+  }
+  .grid-row:nth-child(3) > .grid-cell:nth-child(3) .hexagon{
+    background: transparent;
+    &:after, &:before {
+      border-color: transparent;
+    }
   }
 
   .tile-container {
