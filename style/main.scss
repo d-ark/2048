@@ -1,6 +1,7 @@
 @import "helpers";
 @import "fonts/clear-sans.css";
 
+$sqrt_3: 1.7320508;
 $field-width: 365px;
 $grid-spacing: 10px;
 $grid-row-cells: 5;
@@ -155,6 +156,36 @@ hr {
   }
 }
 
+@mixin hexagon($side, $color) {
+  $inner: $sqrt_3*$side;
+  background: $color;
+  width: $inner;
+  height: $side;
+  position: relative;
+  &:after {
+    content: "";
+    position: absolute;
+    top: -$side/2+1px;
+    left: 0;
+    width: 0;
+    height: 0;
+    border-left: $inner/2 solid transparent;
+    border-right: $inner/2 solid transparent;
+    border-bottom: $side/2 solid $color;
+  }
+  &:before {
+    content: "";
+    position: absolute;
+    bottom: -$side/2+1px;
+    left: 0;
+    width: 0;
+    height: 0;
+    border-left: $inner/2 solid transparent;
+    border-right: $inner/2 solid transparent;
+    border-top: $side/2 solid $color;
+  }
+}
+
 // Styles for buttons
 @mixin button {
   display: inline-block;
@@ -169,7 +200,6 @@ hr {
 
 // Game field mixin used to render CSS at different width
 @mixin game-field {
-  $sqrt_3: 1.7320508;
   $hex-inner-height: $sqrt_3*$tile-size;
   $hex-up-spacing: $tile-size/2 + $sqrt_3*$grid-spacing/2;
 
@@ -324,32 +354,7 @@ hr {
     border-radius: $tile-border-radius;
 
     .hexagon {
-      background: mix($tile-color, $game-container-background, 35);
-      width: $hex-inner-height;
-      height: $tile-size;
-      position: relative;
-      &:after {
-        content: "";
-        position: absolute;
-        top: -$tile-size/2+1px;
-        left: 0;
-        width: 0;
-        height: 0;
-        border-left: $hex-inner-height/2 solid transparent;
-        border-right: $hex-inner-height/2 solid transparent;
-        border-bottom: $tile-size/2 solid mix($tile-color, $game-container-background, 35);
-      }
-      &:before {
-        content: "";
-        position: absolute;
-        bottom: -$tile-size/2+1px;
-        left: 0;
-        width: 0;
-        height: 0;
-        border-left: $hex-inner-height/2 solid transparent;
-        border-right: $hex-inner-height/2 solid transparent;
-        border-top: $tile-size/2 solid mix($tile-color, $game-container-background, 35);
-      }
+      @include hexagon ($tile-size, mix($tile-color, $game-container-background, 35));
 
       &:last-child {
         margin-right: 0;
@@ -371,50 +376,23 @@ hr {
       line-height: $tile-size + 12px;
     }
     .tile-inner{
-        width: $hex-inner-height;
-        height: $tile-size;
-        background: red;
-        position: relative;
-      &:before {
-        content: "";
-        position: absolute;
-        top: -$tile-size/2+1px;
-        left: 0;
-        width: 0;
-        height: 0;
-        border-left: $hex-inner-height/2 solid transparent;
-        border-right: $hex-inner-height/2 solid transparent;
-        border-bottom: $tile-size/2 solid white;
-      }
-      &:after {
-        content: "";
-        position: absolute;
-        bottom: -$tile-size/2+1px;
-        left: 0;
-        width: 0;
-        height: 0;
-        border-left: $hex-inner-height/2 solid transparent;
-        border-right: $hex-inner-height/2 solid transparent;
-        border-top: $tile-size/2 solid white;
-      }
+      @include hexagon($tile-size+0.5px, $tile-color)
     }
 
     // Build position classes
     @for $x from 1 through 5 {
       @for $y from 1 through 5 {
-        $go: false;
-        @if $y < 4 { $go: true; }
-        @if $y == 4 {
-          @if $x == 2 { $go: true; }
-          @if $x == 3 { $go: true; }
-          @if $x == 4 { $go: true; }
-        }
-        @if $y == 5 {
-          @if $x == 3 { $go: true; }
-        }
+        $go: true;
+        @if $x == 1 { @if $y > 3 { $go : false; } }
+        @if $x == 2 { @if $y > 4 { $go : false; } }
+        @if $x == 4 { @if $y < 2 { $go : false; } }
+        @if $x == 5 { @if $y < 1 { $go : false; } }
+
         @if $go {
           &.tile-position-#{$x}-#{$y} {
-            $xPos: -($tile-size - $hex-inner-height/2);
+            $rowYPos: -$hex-inner-height - $grid-spacing + ($tile-size-midle-tria-side/2 - $hex-inner-height/2) + $side-spacing-in-large;
+            $rowYPos: $rowYPos + $grid-spacing + $hex-inner-height + (1 - $y)*($hex-inner-height/2 + $grid-spacing/2);
+            $xPos: $rowYPos + ($grid-spacing + $hex-inner-height)*($x - 1);
             $yPos: ($grid-spacing + $tile-size/2) + ($tile-size + $hex-up-spacing) *($y - 1);
             @include transform(translate($xPos, $yPos));
           }
@@ -431,7 +409,6 @@ hr {
   position: absolute; // Makes transforms relative to the top-left corner
 
   .tile-inner {
-    border-radius: $tile-border-radius;
 
     background: $tile-color;
     text-align: center;
@@ -488,6 +465,13 @@ hr {
 
       // Set background
       background: $mixed-background;
+      &:before{
+        border-top-color: $mixed-background;
+      }
+      &:after{
+        border-bottom-color: $mixed-background;
+      }
+
 
       // Add glow
       $glow-opacity: max($exponent - 4, 0) / ($limit - 4);
