@@ -200,10 +200,10 @@ GameManager.prototype.getVector = function (direction) {
   var map = {
     0: { x: 0,  y: -1 }, // UpRight
     1: { x: 1,  y: 0 },  // Right
-    2: { x: 0,  y: 1 },  // DownRight
+    2: { x: 0,  y: 1 },  // DownLeft
     3: { x: -1, y: 0 },  // Left
     4: { x: -1, y: -1 }, // UpLeft
-    5: { x: 1,  y: 1 },  // DownLeft
+    5: { x: 1,  y: 1 },  // DownRight
   };
 
   return map[direction];
